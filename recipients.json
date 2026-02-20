@@ -1,53 +1,10 @@
-{
-  "_readme": "收件人配置文件 - 添加你和朋友的邮箱",
-  "_note": "系统会给所有 enabled: true 的收件人发送通知",
-  
-  "recipients": [
-    {
-      "name": "张浩洋",
-      "email": "zhanghaoyang2002@gmail.com",
-      "enabled": true,
-      "role": "owner",
-      "preferences": {
-        "notify_fx": true,
-        "notify_jd": true,
-        "notify_amazon": true,
-        "notify_gift_card": true
-      },
-      "notes": "系统主人"
-    },
-    {
-      "name": "朋友A",
-      "email": "friend_a@example.com",
-      "enabled": true,
-      "role": "subscriber",
-      "preferences": {
-        "notify_fx": false,
-        "notify_jd": false,
-        "notify_amazon": true,
-        "notify_gift_card": true
-      },
-      "notes": "只想收到礼品卡通知"
-    },
-    {
-      "name": "朋友B",
-      "email": "friend_b@example.com",
-      "enabled": false,
-      "role": "subscriber",
-      "preferences": {
-        "notify_fx": false,
-        "notify_jd": true,
-        "notify_amazon": false,
-        "notify_gift_card": false
-      },
-      "notes": "暂时禁用，等他需要时再开启"
-    }
-  ],
-  
-  "_instructions": {
-    "如何添加新收件人": "复制一个 recipient 对象，修改 name 和 email",
-    "如何禁用某人": "设置 enabled: false",
-    "role 说明": "owner=系统主人, subscriber=订阅者",
-    "preferences 说明": "可以控制每个人收到哪些类型的通知"
+[
+  {
+    "email": "zhanghaoyang2002@gmail.com",
+    "name": "张浩洋"
+  },
+  {
+    "email": "19878898879@163.com",
+    "name": "钱程"
   }
-}
+]
