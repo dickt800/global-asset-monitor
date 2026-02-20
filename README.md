@@ -1,3 +1,14 @@
+---
+title: Global Asset Monitor
+emoji: 🎁
+colorFrom: blue
+colorTo: green
+sdk: streamlit
+sdk_version: 1.28.0
+app_file: app.py
+pinned: false
+---
+
 # 🌍 全球资产监控系统 (Global Asset Monitor)
 ---
 title: Global Asset Monitor
