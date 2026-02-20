@@ -23,7 +23,8 @@ def run_monitor(force=False, test_email=False):
 
     notifier = BrevoNotifier(
         api_key=os.getenv('BREVO_API_KEY'),
-        recipient_email=os.getenv('RECIPIENT_EMAIL')
+        sender_email=os.getenv('SENDER_EMAIL'),
+        sender_name=os.getenv('SENDER_NAME')
     )
 
     if test_email:
