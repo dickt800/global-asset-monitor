@@ -1,0 +1,321 @@
+# 🗓️ 美国节日提醒配置
+
+## 使用说明
+
+这个文件配置了需要提醒的美国节日。系统会在合适的时间自动发送邮件提醒你查价。
+
+## 节日列表
+
+### 2026年节日日期
+
+```yaml
+# ===================
+# 节日提醒配置
+# ===================
+holiday_monitor:
+  enabled: true
+  
+  holidays:
+    # ====== 一级重要（必查）======
+    
+    # Prime Day（需要手动更新日期）
+    prime_day:
+      enabled: true
+      name: "Prime Day"
+      name_cn: "Prime Day（亚马逊会员日）"
+      importance: 5
+      # 日期：等 Amazon 公布后手动填写
+      # 格式：YYYY-MM-DD
+      # 留空表示未公布
+      date: ""  # 例如：2026-07-15
+      
+      # 什么时候开始提醒你去查 Amazon 公告
+      announcement_check_start: "2026-07-01"  # 从7月1日开始，每周末提醒你查公告
+      
+      # 一旦日期公布，提前几天提醒
+      advance_days: 2
+      
+      description: "Amazon 专属促销，Apple 礼品卡可能打折"
+      strategy: "公布日期后，提前2天开始每天查价"
+      
+      links:
+        - "https://www.amazon.com/"
+        - "https://www.amazon.com/gift-cards"
+    
+    # 黑色星期五（固定算法）
+    black_friday:
+      enabled: true
+      name: "Black Friday"
+      name_cn: "黑色星期五"
+      importance: 5
+      # 黑五是11月第四个周五，系统自动计算
+      # 2026年黑五：11月27日
+      fixed_rule: "november_fourth_friday"
+      advance_days: 7  # 提前一周（11月20日）开始提醒
+      
+      description: "全年最大促销，礼品卡必看"
+      strategy: "提前一周（11月20日）开始，每天查价，直到 Cyber Monday"
+      
+      links:
+        - "https://www.amazon.com/gift-cards"
+        - "https://www.newegg.com/gift-cards/"
+    
+    # 网络星期一（固定算法）
+    cyber_monday:
+      enabled: true
+      name: "Cyber Monday"
+      name_cn: "网络星期一"
+      importance: 5
+      # Cyber Monday 是黑五后的周一，系统自动计算
+      # 2026年：11月30日
+      fixed_rule: "black_friday_plus_3"
+      advance_days: 3  # 提前3天提醒
+      
+      description: "在线折扣日，黑五错过的最后机会"
+      strategy: "当天重点关注"
+      
+      links:
+        - "https://www.amazon.com/gift-cards"
+        - "https://www.newegg.com/gift-cards/"
+    
+    # ====== 二级重要（可查）======
+    
+    # 圣诞节（固定日期）
+    christmas:
+      enabled: true
+      name: "Christmas"
+      name_cn: "圣诞节"
+      importance: 4
+      date: "2026-12-25"
+      advance_days: 7  # 提前一周提醒
+      
+      description: "礼品卡促销高峰"
+      strategy: "12月每周末查一次，圣诞节前一周重点关注"
+      
+      links:
+        - "https://www.amazon.com/gift-cards"
+    
+    # 美国独立日（固定日期）
+    independence_day:
+      enabled: true
+      name: "Independence Day"
+      name_cn: "美国独立日"
+      importance: 2
+      date: "2026-07-04"
+      advance_days: 1  # 提前1天提醒
+      
+      description: "部分商家有小折扣"
+      strategy: "前一天查一次"
+      
+      links:
+        - "https://www.amazon.com/gift-cards"
+        - "https://www.newegg.com/promotions/nepro/index.html"
+    
+    # ====== 三级重要（随意）======
+    
+    # 劳工节（固定算法）
+    labor_day:
+      enabled: true
+      name: "Labor Day"
+      name_cn: "劳工节"
+      importance: 2
+      # 9月第一个周一
+      fixed_rule: "september_first_monday"
+      # 2026年：9月7日
+      advance_days: 1
+      
+      description: "夏末促销，可能有小折扣"
+      strategy: "前一个周末查一次"
+      
+      links:
+        - "https://www.newegg.com/promotions/nepro/index.html"
+    
+    # 返校季（大概时间）
+    back_to_school:
+      enabled: true
+      name: "Back to School"
+      name_cn: "返校季"
+      importance: 2
+      # 8月第一个周末
+      date: "2026-08-01"
+      advance_days: 0
+      
+      description: "电子产品折扣，礼品卡可能连带"
+      strategy: "8月第一个周末查一次"
+      
+      links:
+        - "https://www.newegg.com/promotions/nepro/index.html"
+
+
+# ===================
+# 使用说明
+# ===================
+
+## Prime Day 日期如何更新？
+
+1. 系统会在 7月1日 开始，每周末提醒你去查 Amazon 公告
+2. 你看到 Amazon 公布了日期（如 7月15-16日）
+3. 编辑这个文件，把日期填进去：
+   date: "2026-07-15"
+4. 保存文件
+5. 系统会在 7月13日（提前2天）开始每天提醒你查价
+
+## 如何禁用某个节日？
+
+把 enabled 改为 false：
+```yaml
+independence_day:
+  enabled: false  # 禁用独立日提醒
+```
+
+## 如何修改提前提醒天数？
+
+修改 advance_days：
+```yaml
+black_friday:
+  advance_days: 10  # 改为提前10天提醒
+```
+```
+
+---
+
+## 实际运行效果
+
+### 示例 1：黑五提醒
+
+**11月20日（提前一周）：**
+```
+邮件标题：🔥 黑色星期五即将到来
+
+内容：
+┌─────────────────────────────────────────┐
+│  黑色星期五 (Black Friday)              │
+├─────────────────────────────────────────┤
+│  ⏰ 提醒！黑色星期五即将在 7 天后到来！ │
+│                                         │
+│  📅 日期信息                            │
+│  日期：2026年11月27日（Friday）         │
+│  距离：7 天                             │
+│                                         │
+│  💡 节日说明                            │
+│  全年最大促销，礼品卡必看               │
+│                                         │
+│  🎯 查价策略                            │
+│  提前一周（11月20日）开始，每天查价，   │
+│  直到 Cyber Monday                      │
+│                                         │
+│  🔗 快速链接                            │
+│  • Amazon 礼品卡页面                    │
+│  • Newegg 礼品卡页面                    │
+│                                         │
+│  💡 建议：在手机日历中设置提醒         │
+└─────────────────────────────────────────┘
+```
+
+### 示例 2：Prime Day 提醒
+
+**7月1日（开始关注公告）：**
+```
+邮件标题：📢 Prime Day 即将到来，请关注 Amazon 公告
+
+内容：
+┌─────────────────────────────────────────┐
+│  Prime Day（亚马逊会员日）              │
+├─────────────────────────────────────────┤
+│  📢 提醒！Prime Day 日期尚未公布        │
+│                                         │
+│  💡 请做：                              │
+│  从现在开始，每周末访问：               │
+│  https://www.amazon.com/                │
+│                                         │
+│  查看首页是否有 Prime Day 公告          │
+│                                         │
+│  一旦看到公告，请：                     │
+│  1. 记下日期（如 7月15-16日）          │
+│  2. 编辑 holidays.yaml 文件             │
+│  3. 填写日期：date: "2026-07-15"       │
+│  4. 保存文件                            │
+│                                         │
+│  系统会在日期前2天自动提醒你查价        │
+└─────────────────────────────────────────┘
+```
+
+**你填写日期后，7月13日（提前2天）：**
+```
+邮件标题：🎉 Prime Day 确定了！7月15日
+
+内容：
+┌─────────────────────────────────────────┐
+│  Prime Day（亚马逊会员日）              │
+├─────────────────────────────────────────┤
+│  🎉 Prime Day 日期已确定！              │
+│                                         │
+│  📅 日期：2026年7月15日                 │
+│  距离：2 天                             │
+│                                         │
+│  🎯 从明天开始，每天查价：              │
+│  • Amazon.com                           │
+│  • 搜索 "Apple Gift Card"              │
+│                                         │
+│  💡 可能有折扣的商品：                  │
+│  • Apple Gift Card                      │
+│  • Amazon Gift Card                     │
+│  • 电子产品                             │
+└─────────────────────────────────────────┘
+```
+
+---
+
+## 配置说明
+
+### 节日类型
+
+**1. 固定日期：**
+```yaml
+christmas:
+  date: "2026-12-25"  # 直接写日期
+```
+
+**2. 固定算法：**
+```yaml
+black_friday:
+  fixed_rule: "november_fourth_friday"  # 系统自动计算
+```
+
+**3. 需要手动更新：**
+```yaml
+prime_day:
+  date: ""  # 等公布后手动填写
+  announcement_check_start: "2026-07-01"  # 从这天开始提醒你查公告
+```
+
+### 重要程度
+
+| 等级 | 说明 | 提前天数 | 提醒频率 |
+|-----|------|---------|---------|
+| 5 | 最重要（黑五/Prime Day） | 提前一周 | 每天提醒 |
+| 4 | 很重要（圣诞节） | 提前一周 | 每周末提醒 |
+| 3 | 重要 | 提前3天 | 一次提醒 |
+| 2 | 一般（独立日） | 提前1天 | 一次提醒 |
+| 1 | 可选 | 当天 | 一次提醒 |
+
+---
+
+## 维护指南
+
+### 每年更新（1月）
+
+1. 更新年份：把所有 2026 改成 2027
+2. 清空 Prime Day 日期：`date: ""`
+3. 更新可计算日期的年份
+
+### Prime Day 日期公布后
+
+1. 编辑 holidays.yaml
+2. 找到 prime_day 部分
+3. 填写日期：`date: "2026-07-15"`
+4. 保存
+
+### 添加新节日
+
+复制现有节日的配置，修改参数即可。

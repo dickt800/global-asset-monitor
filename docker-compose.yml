@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Streamlit Dashboard
+  dashboard:
+    build: .
+    container_name: asset-monitor-dashboard
+    ports:
+      - "8501:8501"
+    environment:
+      - BREVO_API_KEY=${BREVO_API_KEY}
+      - RECIPIENT_EMAIL=${RECIPIENT_EMAIL}
+      - SENDER_EMAIL=${SENDER_EMAIL:-noreply@monitor.com}
+      - SENDER_NAME=${SENDER_NAME:-Global Asset Monitor}
+    volumes:
+      - ./config.yaml:/app/config.yaml
+      - ./last_check.json:/app/last_check.json
+    restart: unless-stopped
+    command: streamlit run app.py --server.port=8501 --server.address=0.0.0.0
+
+  # 定时监控任务（可选）
+  # 取消注释以下内容启用定时任务
+  # scheduler:
+  #   build: .
+  #   container_name: asset-monitor-scheduler
+  #   environment:
+  #     - BREVO_API_KEY=${BREVO_API_KEY}
+  #     - RECIPIENT_EMAIL=${RECIPIENT_EMAIL}
+  #     - SENDER_EMAIL=${SENDER_EMAIL:-noreply@monitor.com}
+  #     - SENDER_NAME=${SENDER_NAME:-Global Asset Monitor}
+  #   volumes:
+  #     - ./config.yaml:/app/config.yaml
+  #     - ./last_check.json:/app/last_check.json
+  #   restart: unless-stopped
+  #   command: >
+  #     sh -c "while true; do
+  #       python main.py;
+  #       echo 'Sleeping for 6 hours...';
+  #       sleep 21600;
+  #     done"

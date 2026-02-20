@@ -1,0 +1,25 @@
+# 全球资产监控系统 - 依赖包
+
+# 核心依赖
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+pyyaml>=6.0.1
+
+# 数据处理
+numpy>=1.24.0
+pandas>=2.0.0
+
+# 反爬虫
+fake-useragent>=1.4.0
+
+# Web 界面（Streamlit）
+streamlit>=1.28.0
+
+# HTML 解析
+lxml>=4.9.0
+
+# 定时任务（可选）
+schedule>=1.2.0
+
+# 日志（可选）
+colorlog>=6.7.0

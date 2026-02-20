@@ -1,0 +1,64 @@
+name: Global Asset Monitor
+
+on:
+  schedule:
+    # 每6小时运行一次（北京时间 2:00, 8:00, 14:00, 20:00）
+    - cron: '0 18,0,6,12 * * *'
+  
+  workflow_dispatch:  # 允许手动触发
+    inputs:
+      force:
+        description: '强制运行（忽略静默模式）'
+        required: false
+        default: 'false'
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # 2. 设置 Python 环境
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      # 4. 运行监控
+      - name: Run monitor
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_NAME: ${{ secrets.SENDER_NAME }}
+        run: |
+          if [ "${{ github.event.inputs.force }}" = "true" ]; then
+            python main.py --force
+          else
+            python main.py
+          fi
+      
+      # 5. 保存状态文件（可选）
+      - name: Upload state artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monitor-state
+          path: last_check.json
+          retention-days: 30
+      
+      # 6. 通知运行结果（可选）
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ 监控任务失败，请检查日志"

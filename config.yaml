@@ -1,0 +1,181 @@
+# 全球资产监控系统 - 配置文件
+
+# ===================
+# 节日监控配置（新增）⭐
+# ===================
+holiday_monitor:
+  enabled: true
+  
+  # 自动检索设置
+  search:
+    enabled: true  # 是否启用 Google API 自动检索
+    max_retries: 3
+    retry_interval: 7  # 重试间隔（天）
+  
+  # 启用的节日
+  holidays:
+    - prime_day       # Prime Day（需要检索）
+    - black_friday    # 黑色星期五（算法+检索验证）
+    - cyber_monday    # 网络星期一（算法+检索验证）
+    - christmas       # 圣诞节（固定日期）
+    - independence_day  # 独立日（固定日期）
+
+# ===================
+# 汇率监控配置
+# ===================
+# ⚠️ 重要说明：
+# 如果你在中国大陆用人民币换美元，请使用 fx_monitor_cn（中国版）
+# 它会监控各银行的实际挂牌价（现汇卖出价），这才是你真正能换到的价格！
+# fx_monitor（国际版）监控的是国际市场汇率，仅供参考。
+
+# 中国版汇率监控（推荐中国大陆用户使用）
+fx_monitor_cn:
+  enabled: true              # 启用中国版监控
+  threshold_percent: 4.0     # 触发门槛（%）
+  zscore_window: 180         # Z-Score 窗口（天）
+  banks:                     # 要监控的银行列表
+    - boc                    # 中国银行
+    - icbc                   # 工商银行（待实现）
+    - cmb                    # 招商银行（待实现）
+  
+  # 🆕 月度美元支出（用于计算每月购汇建议）
+  # 例如：Mullvad VPN × 2 = €10 ≈ $11-12
+  #      Cloudflare Pro = $20
+  # 根据你的实际支出修改此值
+  monthly_usd_cost: 12.0     # 默认 $12/月
+  
+  # 注意：只支持 USD/CNY，其他货币对需扩展
+
+# 国际版汇率监控（仅供参考，不是实际成交价）
+fx_monitor:
+  enabled: false             # 建议禁用，使用上面的 fx_monitor_cn
+  threshold_percent: 4.0
+  zscore_window: 180
+  pairs:
+    usd_cny:
+      base: USD
+      quote: CNY
+
+# ===================
+# 京东自营监控配置
+# ===================
+jd_monitor:
+  enabled: true
+  products:
+    # 鼠标 - 1000Hz 采样率/AA电池版
+    - sku_id: "100012345678"  # 示例 SKU（请替换为真实SKU）
+      name: "罗技 G304 无线游戏鼠标"
+      expected_price: 199.0
+      priority: high
+    
+    # 高性能固态硬盘
+    - sku_id: "100087654321"  # 示例 SKU
+      name: "三星 990 PRO 2TB NVMe SSD"
+      expected_price: 1299.0
+      priority: high
+    
+    # 暗影骑士配件
+    - sku_id: "100011112222"  # 示例 SKU
+      name: "暗影骑士 龙 DDR5 内存条 32GB"
+      expected_price: 799.0
+      priority: medium
+
+# ===================
+# Amazon 监控配置
+# ===================
+amazon_monitor:
+  enabled: true
+  region: us  # us/uk/de/jp
+  
+  # 礼品卡促销监控（重要！）
+  monitor_gift_cards: true    # 监控 Gift Card Promotions 页面
+  monitor_reload: true        # 监控 Amazon Reload 促销
+  
+  products:
+    # Apple Gift Card（重点监控）
+    - asin: "B08F3Y7QKW"
+      name: "Apple Gift Card $100"
+      expected_price: 100.0    # 面值
+      is_gift_card: true       # ⭐ 标记为礼品卡
+      priority: high
+    
+    - asin: "B08F3Y7SMY"
+      name: "Apple Gift Card $50"
+      expected_price: 50.0
+      is_gift_card: true
+      priority: high
+    
+    # Amazon Gift Card（通常不打折，但可以监控）
+    - asin: "B0915SKM1L"
+      name: "Amazon Gift Card $100"
+      expected_price: 100.0
+      is_gift_card: true
+      priority: medium
+    
+    # 其他商品示例
+    # - asin: "B0BSHF7WHW"
+    #   name: "AirPods Pro (2nd Gen)"
+    #   expected_price: 189.0
+    #   is_gift_card: false
+    #   priority: medium
+  
+  # 关键词搜索（扩展功能）
+  keywords:
+    # - keyword: "Apple AirPods Pro"
+    #   max_price: 189.0
+    #   priority: low
+
+# ===================
+# 机票监控配置
+# ===================
+flight_monitor:
+  enabled: false  # 暂未实现，预留接口
+  routes:
+    - origin: PVG  # 上海浦东
+      destination: LAX  # 洛杉矶
+      date_range:
+        start: "2026-06-01"
+        end: "2026-06-30"
+      target_price: 3500.0
+      priority: medium
+
+# ===================
+# 通知配置
+# ===================
+notification:
+  brevo:
+    # API Key 必须从环境变量读取（安全）
+    # export BREVO_API_KEY="your_api_key"
+    sender_email: "monitor@yourdomain.com"
+    sender_name: "全球资产监控系统"
+    # recipient_email: "your_email@gmail.com"  # 从环境变量读取
+
+# ===================
+# 全局策略配置
+# ===================
+global_strategy:
+  enabled: true
+  # 汇率联动策略
+  fx_linkage:
+    # 人民币贬值时增加京东巡检频率
+    increase_jd_on_cny_depreciation: true
+    # 人民币升值时推荐 Amazon 购物
+    recommend_amazon_on_cny_appreciation: true
+
+# ===================
+# 调度配置（用于定时任务）
+# ===================
+scheduler:
+  # 检查间隔（分钟）
+  check_interval_minutes: 60
+  # 静默模式（汇率未达到门槛时不执行商品监控）
+  silent_mode_enabled: true
+  # 强制运行（忽略静默模式）
+  force_run: false
+
+# ===================
+# 日志配置
+# ===================
+logging:
+  level: INFO  # DEBUG/INFO/WARNING/ERROR
+  file: "monitor.log"
