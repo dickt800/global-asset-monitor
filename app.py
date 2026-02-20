@@ -198,7 +198,10 @@ def main():
         st.header("🧭 导航")
         page = st.radio("选择页面", ["💱 汇率总览", "⚙️ 监控配置", "📅 购汇时机", "🔑 环境变量"])
         st.markdown("---")
-        st.success("✅ 邮件已配置") if os.getenv('BREVO_API_KEY') else st.warning("⚠️ 邮件未配置")
+        if os.getenv('BREVO_API_KEY'):
+            st.success("✅ 邮件已配置")
+        else:
+            st.warning("⚠️ 邮件未配置")
         st.markdown("---")
         st.caption("美元汇率监控系统 v2.0")
 
