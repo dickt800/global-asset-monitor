@@ -4,8 +4,8 @@
   
   "recipients": [
     {
-      "name": "你的名字",
-      "email": "your_email@example.com",
+      "name": "张浩洋",
+      "email": "zhanghaoyang2002@gmail.com",
       "enabled": true,
       "role": "owner",
       "preferences": {
