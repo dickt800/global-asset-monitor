@@ -13,7 +13,7 @@ from datetime import datetime
 # 添加项目根目录到路径
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from monitors import FXMonitor, JDMonitor, AmazonMonitor, FlightMonitor
+from monitors.fx_monitor_cn import FXMonitorCN
 from monitors.fx_monitor_cn import FXMonitorCN
 from utils import BrevoNotifier, GlobalStrategy
 
