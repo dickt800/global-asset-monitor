@@ -36,12 +36,17 @@ def run_monitor(force=False, test_email=False):
     fx_monitor = FXMonitorCN(fx_config)
     notifications = fx_monitor.check()
 
-    if notifications:
-        print(f"📬 发现 {len(notifications)} 条提醒，发送邮件...")
-        notifier.send_notification(notifications)
-        print("✅ 邮件发送完成")
-    else:
-        print("✅ 汇率正常，无需发送")
+    if not notifications:
+        notifications = [{
+            'title': '✅ 汇率监控测试',
+            'message': '<p>系统运行正常，汇率未达到提醒门槛。</p>',
+            'url': 'https://www.boc.cn/sourcedb/whpj/',
+            'price_info': '测试邮件',
+            'level': 1
+        }]
+
+    notifier.send_notification(notifications)
+    print("✅ 邮件发送完成")
 
 
 def main():
