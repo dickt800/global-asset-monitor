@@ -1,4 +1,4 @@
-name: Global Asset Monitor
+name: Global Asset Monitor 
 
 on:
   schedule:
